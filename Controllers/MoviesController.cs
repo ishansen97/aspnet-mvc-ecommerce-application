@@ -19,8 +19,12 @@ namespace ETicketsStore.Controllers
 
 		public async Task<IActionResult> Index()
 		{
-			var movies = await _context.Movie.ToListAsync();
-			return View();
+			var movies = await _context
+								.Movie
+								.Include(m => m.Cinema)
+								.OrderBy(m => m.Name)
+								.ToListAsync();
+			return View(movies);
 		}
 	}
 }

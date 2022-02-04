@@ -18,10 +18,10 @@ namespace ETicketsStore.Controllers
 			_context = context;
 		}
 
-		public IActionResult Index()
+		public async Task<IActionResult> Index()
 		{
-			var cinemas = _context.Cinema.ToListAsync();
-			return View();
+			var cinemas = await _context.Cinema.ToListAsync();
+			return View(cinemas);
 		}
 	}
 }

@@ -58,6 +58,9 @@ namespace ETicketsStore
 					name: "default",
 					pattern: "{controller=Home}/{action=Index}/{id?}");
 			});
+
+			// initialize the database with data.
+			//AppDbInitializer.Seed(app);
 		}
 	}
 }

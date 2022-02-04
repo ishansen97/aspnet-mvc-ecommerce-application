@@ -10,19 +10,6 @@ namespace ETicketsStore.Data
 {
 	public class AppDbContext : DbContext
 	{
-		#region DbSets
-		public DbSet<Actor> Actors;
-
-		public DbSet<Movie> Movies;
-
-		public DbSet<Producer> Producers;
-
-		public DbSet<Cinema> Cinemas;
-
-		public DbSet<ActorMovie> ActorMovies;
-
-		#endregion
-
 		public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
 		{
 		}
@@ -36,5 +23,18 @@ namespace ETicketsStore.Data
 
 			base.OnModelCreating(modelBuilder);
 		}
+
+		#region DbSets
+		public DbSet<Actor> Actor { get; set; }
+
+		public DbSet<Movie> Movie { get; set; }
+
+		public DbSet<Producer> Producer { get; set; }
+
+		public DbSet<Cinema> Cinema { get; set; }
+
+		public DbSet<ActorMovie> ActorMovie { get; set; }
+
+		#endregion
 	}
 }

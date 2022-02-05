@@ -1,4 +1,5 @@
 ﻿using ETicketsStore.Data;
+using ETicketsStore.Data.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -10,16 +11,16 @@ namespace ETicketsStore.Controllers
 {
 	public class ActorsController : Controller
 	{
-		private readonly AppDbContext _context;
+		private readonly ActorsService _actorService;
 
-		public ActorsController(AppDbContext appDbContext)
+		public ActorsController(ActorsService actorService)
 		{
-			_context = appDbContext;
+			_actorService = actorService;
 		}
 
 		public async Task<IActionResult> Index()
 		{
-			var data = await _context.Actor.ToListAsync();
+			var data = await _actorService.GetAll();
 			return View(data);
 		}
 	}

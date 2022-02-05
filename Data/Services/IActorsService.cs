@@ -9,14 +9,14 @@ namespace ETicketsStore.Data.Services
 {
     public interface IActorsService
     {
-        Task<IEnumerable<Actor>> GetAll();
+        Task<IEnumerable<Actor>> GetAllAsync();
 
-        Actor GetById(int id);
+        Task<Actor> GetByIdAsync(int id);
 
-        void Add(Actor entity);
+        Task AddAsync(Actor entity);
 
-        Actor Update(int id, Actor newEntity);
+        Task<Actor> UpdateAsync(int id, Actor newEntity);
 
-        void Delete(int id);
+        Task DeleteAsync(int id);
     }
 }

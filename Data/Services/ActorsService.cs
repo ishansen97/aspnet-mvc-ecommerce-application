@@ -18,32 +18,36 @@ namespace ETicketsStore.Data.Services
 			_context = context;
 		}
 
-		public void Add(Actor entity)
+		public async Task AddAsync(Actor entity)
 		{
-			_context.Actor.Add(entity);
-			_context.SaveChanges();
+			await _context.Actor.AddAsync(entity);
+			await _context.SaveChangesAsync();
 		}
 
-		public void Delete(int id)
+		public async Task DeleteAsync(int id)
 		{
-			throw new NotImplementedException();
+			var actor = await _context.Actor.FirstOrDefaultAsync(a => a.Id == id);
+			_context.Actor.Remove(actor);
+			await _context.SaveChangesAsync();
 		}
 
-		public async Task<IEnumerable<Actor>> GetAll()
+		public async Task<IEnumerable<Actor>> GetAllAsync()
 		{
 			var actors = await _context.Actor.ToListAsync();
 			return actors;
 		}
 
-		public Actor GetById(int id)
+		public async Task<Actor> GetByIdAsync(int id)
 		{
-			var actor = _context.Actor.Where(a => a.Id == id).FirstOrDefault();
+			var actor = await _context.Actor.FirstOrDefaultAsync(a => a.Id == id);
 			return actor;
 		}
 
-		public Actor Update(int id, Actor newEntity)
+		public async Task<Actor> UpdateAsync(int id, Actor newEntity)
 		{
-			return default;
+			_context.Update(newEntity);
+			await _context.SaveChangesAsync();
+			return newEntity;
 		}
 	}
 }

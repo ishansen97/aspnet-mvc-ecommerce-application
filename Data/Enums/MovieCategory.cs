@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ETicketsStore.Data
+namespace ETicketsStore.Data.Enums
 {
     public enum MovieCategory
     {

@@ -1,4 +1,7 @@
 using ETicketsStore.Data;
+using ETicketsStore.Data.Services;
+using ETicketsStore.Data.Services.ServiceContracts;
+using ETicketsStore.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -28,6 +31,12 @@ namespace ETicketsStore
 			// configuring Db Context
 			services.AddDbContext<AppDbContext>(options => 
 													options.UseSqlServer(Configuration.GetConnectionString("DefaultConnectionString")));
+
+			// configuring services
+			services.AddScoped<IActorsService, ActorsService>();
+			services.AddScoped<IProducerService, ProducerService>();
+			services.AddScoped<ICinemaService, CinemaService>();
+			services.AddScoped<IMovieService, MovieService>();
 
 			services.AddControllersWithViews();
 		}

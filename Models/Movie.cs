@@ -1,5 +1,6 @@
 ﻿using ETicketsStore.Data;
 using ETicketsStore.Data.Base;
+using ETicketsStore.Data.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

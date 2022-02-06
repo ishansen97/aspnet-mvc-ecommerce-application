@@ -6,9 +6,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ETicketsStore.Data.Services
+namespace ETicketsStore.Data.Services.ServiceContracts
 {
-    public interface IActorsService : IEntityBaseRepository<Actor>
+    public interface ICinemaService : IEntityBaseRepository<Cinema>
     {
+        
     }
 }

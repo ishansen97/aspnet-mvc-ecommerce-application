@@ -1,7 +1,6 @@
 ﻿using ETicketsStore.Data.Base;
 using ETicketsStore.Data.Services.ServiceContracts;
 using ETicketsStore.Models;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,10 +9,9 @@ using System.Threading.Tasks;
 
 namespace ETicketsStore.Data.Services
 {
-	public class ActorsService : EntityBaseRepository<Actor>, IActorsService
+	public class ProducerService : EntityBaseRepository<Producer>, IProducerService
 	{
-
-		public ActorsService(AppDbContext context) : base(context)
+		public ProducerService(AppDbContext context) : base(context)
 		{
 		}
 	}

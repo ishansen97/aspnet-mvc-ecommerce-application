@@ -1,5 +1,6 @@
 ﻿using ETicketsStore.Data;
 using ETicketsStore.Data.Services;
+using ETicketsStore.Data.Services.ServiceContracts;
 using ETicketsStore.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -102,7 +103,5 @@ namespace ETicketsStore.Controllers
 			await _actorService.DeleteAsync(id);
 			return RedirectToAction(nameof(Index));
 		}
-
-
 	}
 }

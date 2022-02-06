@@ -23,7 +23,7 @@ namespace ETicketsStore.Models
 		public string FullName { get; set; }
 
 		[Display(Name = "Bio")]
-		[Required(ErrorMessage = "Bio is required")]
+		[Required(ErrorMessage = "Biography is required")]
 		public string Bio { get; set; }
 
 		// Relationships

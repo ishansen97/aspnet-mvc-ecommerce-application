@@ -32,7 +32,6 @@ namespace ETicketsStore.Controllers
 			return View();
 		}
 
-
 		[HttpPost]
 		public async Task<IActionResult> Create([Bind("Logo,Name,Description")]Cinema cinema)
 		{
@@ -43,5 +42,62 @@ namespace ETicketsStore.Controllers
 			await _cinemaService.AddAsync(cinema);
 			return RedirectToAction(nameof(Index));
 		}
+
+		public async Task<IActionResult> Details(int id)
+		{
+			var cinemas = await _cinemaService.GetByIdAsync(id);
+			if (cinemas == null) return View("NotFound");
+			return View(cinemas);
+		}
+
+		// GET: Actors/Edit/{id}
+		public async Task<IActionResult> Edit(int id)
+		{
+			var cinemaDetails = await _cinemaService.GetByIdAsync(id);
+
+			if (cinemaDetails == null)
+			{
+				return View("NotFound");
+			}
+			return View(cinemaDetails);
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> Edit(int id, [Bind("Id,Logo,Name,Description")] Cinema cinema)
+		{
+			if (!ModelState.IsValid)
+			{
+				return View(cinema);
+			}
+			await _cinemaService.UpdateAsync(id, cinema);
+			return RedirectToAction(nameof(Index));
+		}
+
+		// GET: Actors/Delete/{id}
+		public async Task<IActionResult> Delete(int id)
+		{
+			var producerDetails = await _cinemaService.GetByIdAsync(id);
+
+			if (producerDetails == null)
+			{
+				return View("NotFound");
+			}
+			return View(producerDetails);
+		}
+
+		[HttpPost, ActionName("Delete")]
+		public async Task<IActionResult> DeleteConfirmed(int id)
+		{
+			var actorDetails = await _cinemaService.GetByIdAsync(id);
+
+			if (actorDetails == null)
+			{
+				return View("NotFound");
+			}
+
+			await _cinemaService.DeleteAsync(id);
+			return RedirectToAction(nameof(Index));
+		}
+
 	}
 }

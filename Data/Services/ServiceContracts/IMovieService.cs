@@ -10,6 +10,6 @@ namespace ETicketsStore.Data.Services.ServiceContracts
 {
     public interface IMovieService : IEntityBaseRepository<Movie>
     {
-        
+        Task<Movie> GetMovieByIdAsync(int id);
     }
 }

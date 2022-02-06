@@ -37,7 +37,13 @@ namespace ETicketsStore.Controllers
 										movie.Description.Contains(searchString))
 									.ToList();
 
-				return View("Index", filteredResults);
+				if (filteredResults.Count > 0)
+				{
+					return View("Index", filteredResults);
+				}
+
+				return View("NotFound");
+
 			}
 
 			return View("Index", movies);

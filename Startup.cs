@@ -1,4 +1,5 @@
 using ETicketsStore.Data;
+using ETicketsStore.Data.Cart;
 using ETicketsStore.Data.Services;
 using ETicketsStore.Data.Services.ServiceContracts;
 using ETicketsStore.Models;
@@ -37,6 +38,7 @@ namespace ETicketsStore
 			services.AddScoped<IProducerService, ProducerService>();
 			services.AddScoped<ICinemaService, CinemaService>();
 			services.AddScoped<IMovieService, MovieService>();
+			services.AddScoped<ShoppingCart>();
 
 			services.AddControllersWithViews();
 		}

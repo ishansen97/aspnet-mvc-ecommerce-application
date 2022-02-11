@@ -5,6 +5,7 @@ using ETicketsStore.Data.Services.ServiceContracts;
 using ETicketsStore.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -38,7 +39,12 @@ namespace ETicketsStore
 			services.AddScoped<IProducerService, ProducerService>();
 			services.AddScoped<ICinemaService, CinemaService>();
 			services.AddScoped<IMovieService, MovieService>();
-			services.AddScoped<ShoppingCart>();
+			services.AddScoped<IOrdersService, OrdersService>();
+
+			services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+			services.AddScoped(sc => ShoppingCart.GetShoppingCart(sc));
+
+			services.AddSession();
 
 			services.AddControllersWithViews();
 		}
@@ -60,6 +66,7 @@ namespace ETicketsStore
 			app.UseStaticFiles();
 
 			app.UseRouting();
+			app.UseSession();
 
 			app.UseAuthorization();
 

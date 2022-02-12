@@ -28,7 +28,7 @@ namespace ETicketsStore.Data.Cart
 		/// Retrieve the shopping cart from the user session
 		/// </summary>
 		/// <param name="services">Service Provider</param>
-		/// <returns>The shoppingcart instance</returns>
+		/// <returns>The session instance of <see cref="ShoppingCart"></returns>
 		public static ShoppingCart GetShoppingCart(IServiceProvider services)
 		{
 			ISession session = services.GetRequiredService<IHttpContextAccessor>()?.HttpContext.Session;
@@ -79,6 +79,15 @@ namespace ETicketsStore.Data.Cart
 			}
 
 			_context.SaveChanges();
+		}
+
+		public async Task ClearShoppingCartAsync()
+		{
+			var items = await _context.ShoppingCartItems
+								.Where(n => n.ShoppingCartId == ShoppingCartId)
+								.ToListAsync();
+			_context.ShoppingCartItems.RemoveRange(items);
+			await _context.SaveChangesAsync();
 		}
 
 		public void RemoveItemFromCart(Movie movie)

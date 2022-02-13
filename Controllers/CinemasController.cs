@@ -1,6 +1,8 @@
 ﻿using ETicketsStore.Data;
 using ETicketsStore.Data.Services.ServiceContracts;
+using ETicketsStore.Data.Static;
 using ETicketsStore.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -11,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace ETicketsStore.Controllers
 {
+	[Authorize(Roles = UserRoles.Admin)]
 	public class CinemasController : Controller
 	{
 		private readonly ICinemaService _cinemaService;
@@ -20,6 +23,7 @@ namespace ETicketsStore.Controllers
 			_cinemaService = cinemaService;
 		}
 
+		[AllowAnonymous]
 		public async Task<IActionResult> Index()
 		{
 			var cinemas = await _cinemaService.GetAllAsync();
@@ -43,6 +47,7 @@ namespace ETicketsStore.Controllers
 			return RedirectToAction(nameof(Index));
 		}
 
+		[AllowAnonymous]
 		public async Task<IActionResult> Details(int id)
 		{
 			var cinemas = await _cinemaService.GetByIdAsync(id);

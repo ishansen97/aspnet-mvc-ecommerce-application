@@ -1,7 +1,9 @@
 ﻿using ETicketsStore.Data;
 using ETicketsStore.Data.Services;
 using ETicketsStore.Data.Services.ServiceContracts;
+using ETicketsStore.Data.Static;
 using ETicketsStore.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -11,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace ETicketsStore.Controllers
 {
+	[Authorize(Roles = UserRoles.Admin)]
 	public class ActorsController : Controller
 	{
 		private readonly IActorsService _actorService;
@@ -20,6 +23,7 @@ namespace ETicketsStore.Controllers
 			_actorService = actorService;
 		}
 
+		[AllowAnonymous]
 		public async Task<IActionResult> Index()
 		{
 			var data = await _actorService.GetAllAsync();
@@ -44,6 +48,7 @@ namespace ETicketsStore.Controllers
 		}
 
 		// GET: Actors/Details/{id}
+		[AllowAnonymous]
 		public async Task<IActionResult> Details(int id)
 		{
 			var actorDetails = await _actorService.GetByIdAsync(id);

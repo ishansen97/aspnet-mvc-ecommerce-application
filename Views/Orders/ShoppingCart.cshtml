@@ -1,0 +1,148 @@
+﻿@using ETicketsStore.Data.ViewModels
+@model ShoppingCartVM
+
+@{
+    ViewData["Title"] = "Shopping cart summary";
+}
+
+<div class="row">
+    <div class="col-md-8 offset-2">
+        <div class="text-center">
+            <h2>Your shopping cart summary</h2>
+        </div>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Selected Amount</th>
+                    <th>Movie</th>
+                    <th>Price</th>
+                    <th>Subtotal</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.ShoppingCart.ShoppingCartItems)
+                {
+                    <tr>
+                        <td class="align-middle">
+                            @item.Amount
+                        </td>
+                        <td class="align-middle">
+                            @item.Movie.Name
+                        </td>
+                        <td class="align-middle">
+                            @item.Movie.Price.ToString("c")
+                        </td>
+                        <td class="align-middle">
+                            @((item.Amount * item.Movie.Price).ToString("c"))
+                        </td>
+                        <td class="align-middle">
+                            <a class="text-danger" asp-action="RemoveItemFromShoppingCart" asp-route-id="@item.Movie.Id">
+                                <i class="bi bi-cart-dash"></i>
+                            </a>
+                            <a class="text-success" asp-action="AddToShoppingCart" asp-route-id="@item.Movie.Id">
+                                <i class="bi bi-cart-plus"></i>
+                            </a>
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="2"></td>
+                    <td><b>Total:</b></td>
+                    <td>
+                        @Model.ShoppingCartTotal.ToString("c")
+                    </td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <div class="text-center">
+            <div class="btn-group">
+                @*<a class="btn btn-outline-primary" asp-action="CompleteOrder">
+                        Complete Order
+                    </a>*@
+                <div id="card-payment-btn" style="padding-right: 10px">
+                    @*<span style="padding: 5px"></span>*@
+                </div>
+                <a class="btn btn-outline-success" style="height: 50px" asp-controller="Movies" asp-action="Index">
+                    Add more Items
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @*<script src="https://www.paypalobjects.com/api/checkout.js"></script>*@
+    <script src="https://www.paypal.com/sdk/js?client-id=AdKPVpcR16lqv5J3oWBmzhbSyHIUSfBlvMRuHYbwFW0-ZRO_UuyHKqy7O3A5UlNIKokjbq8ig1j31zce"></script>
+    <script>
+        let _total = @Html.Raw(Model.ShoppingCartTotal);
+        paypal.Buttons({
+            createOrder: function (data, actions) {
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            value: _total
+                        }
+                    }]
+                });
+            },
+
+            // Finalize the transaction after payer approval
+            onApprove: function (data, actions) {
+                return actions.order.capture().then(function (orderData) {
+                    var url = '@Url.Action("CompleteOrder", "Orders", new { })';
+                    window.location.href = url;
+                    // Successful capture! For dev/demo purposes:
+                    //console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+                    //var transaction = orderData.purchase_units[0].payments.captures[0];
+                    //alert('Transaction ' + transaction.status + ': ' + transaction.id + '\n\nSee console for all available details');
+
+                    //actions.redirect("Orders/CompleteOrder");
+
+                    // When ready to go live, remove the alert and show a success message within this page. For example:
+                    // var element = document.getElementById('paypal-button-container');
+                    // element.innerHTML = '';
+                    // element.innerHTML = '<h3>Thank you for your payment!</h3>';
+                    // Or go to another URL:  actions.redirect('thank_you.html');
+                });
+            }
+
+        }).render('#card-payment-btn');
+    </script>
+    @*<script>
+            paypal.Button.render({
+                // configure environment
+                //env: 'sandbox',
+                env: 'sb-lwv43n13663052@business.example.com',
+                client: {
+                    sanbox: 'AdKPVpcR16lqv5J3oWBmzhbSyHIUSfBlvMRuHYbwFW0-ZRO_UuyHKqy7O3A5UlNIKokjbq8ig1j31zce'
+                },
+
+                // customize button
+                locale: 'en_US',
+                style: {
+                    size: 'small',
+                    color: 'gold',
+                    shape: 'pill'
+                },
+                commit: true,
+
+                //set up payment
+                payment: function (data, actions) {
+                    console.log('payment set up');
+                },
+
+                // Execute
+                onAuthorize: function (data, actions) {
+                    console.log('payment execution');
+                }
+
+            }, '#card-payment-btn');
+        </script>*@
+}

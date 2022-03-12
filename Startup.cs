@@ -3,10 +3,12 @@ using ETicketsStore.Data.Cart;
 using ETicketsStore.Data.Services;
 using ETicketsStore.Data.Services.ServiceContracts;
 using ETicketsStore.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -44,7 +46,24 @@ namespace ETicketsStore
 			services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 			services.AddScoped(sc => ShoppingCart.GetShoppingCart(sc));
 
+			// Authentication and Authorization
+			services.AddIdentity<ApplicationUser, IdentityRole>(config => 
+			{
+				config.Password.RequiredLength = 4;
+				config.Password.RequireDigit = false;
+				config.Password.RequireNonAlphanumeric = false;
+				config.Password.RequireUppercase = false;
+				//config.SignIn.RequireConfirmedEmail = true;
+			})
+				.AddEntityFrameworkStores<AppDbContext>();
+
 			services.AddSession();
+			services.AddMemoryCache();
+			services.AddAuthentication(options => 
+			{
+				options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+			});
+
 
 			services.AddControllersWithViews();
 		}
@@ -68,6 +87,8 @@ namespace ETicketsStore
 			app.UseRouting();
 			app.UseSession();
 
+			// Authentication and Authorization
+			app.UseAuthentication();
 			app.UseAuthorization();
 
 			app.UseEndpoints(endpoints =>
@@ -79,6 +100,7 @@ namespace ETicketsStore
 
 			// initialize the database with data.
 			//AppDbInitializer.Seed(app);
+			//AppDbInitializer.SeedUsersAndRolesAsync(app).Wait();
 		}
 	}
 }

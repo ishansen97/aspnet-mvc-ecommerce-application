@@ -1,6 +1,8 @@
 ﻿using ETicketsStore.Data;
 using ETicketsStore.Data.Services.ServiceContracts;
+using ETicketsStore.Data.Static;
 using ETicketsStore.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -11,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace ETicketsStore.Controllers
 {
+	[Authorize(Roles = UserRoles.Admin)]
     public class ProducersController : Controller
     {
 		private readonly IProducerService _producerService;
@@ -20,6 +23,7 @@ namespace ETicketsStore.Controllers
 			_producerService = producerService;
 		}
 
+		[AllowAnonymous]
 		public async Task<IActionResult> Index()
 		{
 			var producers = await _producerService.GetAllAsync();
@@ -27,7 +31,7 @@ namespace ETicketsStore.Controllers
 		}
 
 		// GET: producers/details/{id}
-
+		[AllowAnonymous]
 		public async Task<IActionResult> Details(int id)
 		{
 			var producers = await _producerService.GetByIdAsync(id);

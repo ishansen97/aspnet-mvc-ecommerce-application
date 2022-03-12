@@ -1,6 +1,5 @@
 ﻿using ETicketsStore.Data;
 using ETicketsStore.Data.Services.ServiceContracts;
-using ETicketsStore.Data.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -9,9 +8,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ETicketsStore.Data.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using ETicketsStore.Data.Static;
 
 namespace ETicketsStore.Controllers
 {
+	[Authorize(Roles = UserRoles.Admin)]
 	public class MoviesController : Controller
 	{
 		private readonly IMovieService _movieService;
@@ -21,12 +23,14 @@ namespace ETicketsStore.Controllers
 			_movieService = movieService;
 		}
 
+		[AllowAnonymous]
 		public async Task<IActionResult> Index()
 		{
 			var movies = await _movieService.GetAllAsync(m => m.Cinema);
 			return View(movies);
 		}
 
+		[AllowAnonymous]
 		public async Task<IActionResult> Filter(string searchString)
 		{
 			var movies = await _movieService.GetAllAsync(m => m.Cinema);

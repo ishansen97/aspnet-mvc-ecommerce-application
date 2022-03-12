@@ -15,6 +15,6 @@ namespace ETicketsStore.Data.ViewModels
 
 		[Required]
 		[DataType(DataType.Password)]
-		public string Passowrd { get; set; }
+		public string Password { get; set; }
 	}
 }

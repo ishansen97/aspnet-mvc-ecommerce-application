@@ -1,4 +1,5 @@
-﻿using ETicketsStore.Data.Services.ServiceContracts;
+﻿using AutoMapper;
+using ETicketsStore.Data.Services.ServiceContracts;
 using ETicketsStore.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -12,10 +13,14 @@ namespace ETicketsStore.Data.Services
 	public class OrdersService : IOrdersService
 	{
 		private readonly AppDbContext _context;
+		private readonly IMapper _mapper;
 
-		public OrdersService(AppDbContext context)
+		public OrdersService(
+			AppDbContext context,
+			IMapper mapper)
 		{
 			_context = context;
+			_mapper = mapper;
 		}
 
 		public async Task<List<Order>> GetOrdersByUserIdAndRoleAsync(string userId, string userRole)
@@ -45,19 +50,14 @@ namespace ETicketsStore.Data.Services
 			await _context.Orders.AddAsync(order);
 			await _context.SaveChangesAsync();
 
-			foreach (var item in items)
-			{
-				var orderItem = new OrderItem()
-				{
-					Amount = item.Amount,
-					MovieId = item.Movie.Id,
-					OrderId = order.Id,
-					Price = item.Movie.Price
-				};
+			var orderItems = _mapper.Map<List<OrderItem>>(items);
 
-				await _context.OrderItems.AddAsync(orderItem);
-			}
+            foreach (var orderItem in orderItems)
+            {
+				orderItem.OrderId = order.Id;
+            }
 
+			await _context.OrderItems.AddRangeAsync(orderItems);
 			await _context.SaveChangesAsync();
 		}
 	}

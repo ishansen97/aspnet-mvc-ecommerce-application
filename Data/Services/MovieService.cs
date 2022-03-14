@@ -1,4 +1,5 @@
-﻿using ETicketsStore.Data.Base;
+﻿using AutoMapper;
+using ETicketsStore.Data.Base;
 using ETicketsStore.Data.Services.ServiceContracts;
 using ETicketsStore.Data.ViewModels;
 using ETicketsStore.Models;
@@ -14,26 +15,32 @@ namespace ETicketsStore.Data.Services
 	public class MovieService : EntityBaseRepository<Movie>, IMovieService
 	{
 		private readonly AppDbContext _context;
+		private readonly IMapper _mapper;
 
-		public MovieService(AppDbContext context) : base(context)
+		public MovieService(
+			AppDbContext context,
+			IMapper mapper) : base(context)
 		{
 			_context = context;
+			_mapper = mapper;
 		}
 
 		public async Task AddNewMovieAsync(NewMovieVM data)
 		{
-			var newMovie = new Movie()
-			{
-				Name = data.Name,
-				Description = data.Description,
-				Price = data.Price,
-				ImageURL = data.ImageURL,
-				CinemaId = data.CinemaId,
-				StartDate = data.StartDate,
-				EndDate = data.EndDate,
-				MovieCategory = data.MovieCategory,
-				ProducerId = data.ProducerId
-			};
+			//var newMovie = new Movie()
+			//{
+			//	Name = data.Name,
+			//	Description = data.Description,
+			//	Price = data.Price,
+			//	ImageURL = data.ImageURL,
+			//	CinemaId = data.CinemaId,
+			//	StartDate = data.StartDate,
+			//	EndDate = data.EndDate,
+			//	MovieCategory = data.MovieCategory,
+			//	ProducerId = data.ProducerId
+			//};
+
+			var newMovie = _mapper.Map<Movie>(data);
 
 			await _context.Movie.AddAsync(newMovie);
 			await _context.SaveChangesAsync();

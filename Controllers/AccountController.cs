@@ -1,4 +1,5 @@
-﻿using ETicketsStore.Data;
+﻿using AutoMapper;
+using ETicketsStore.Data;
 using ETicketsStore.Data.Static;
 using ETicketsStore.Data.ViewModels;
 using ETicketsStore.Models;
@@ -17,14 +18,17 @@ namespace ETicketsStore.Controllers
 		private readonly UserManager<ApplicationUser> _userManager;
 		private readonly SignInManager<ApplicationUser> _signInManager;
 		private readonly AppDbContext _context;
+		private readonly IMapper _mapper;
 
 		public AccountController(UserManager<ApplicationUser> userManager,
 			SignInManager<ApplicationUser> signInManager,
-			AppDbContext context)
+			AppDbContext context,
+			IMapper mapper)
 		{
 			_userManager = userManager;
 			_signInManager = signInManager;
 			_context = context;
+			_mapper = mapper;
 		}
 
 		public IActionResult Register()
@@ -47,12 +51,14 @@ namespace ETicketsStore.Controllers
 				return View(registerVM);
 			}
 
-			var newUser = new ApplicationUser()
+			/*var newUser = new ApplicationUser()
 			{
 				FullName = registerVM.FullName,
 				Email = registerVM.EmailAddress,
 				UserName = registerVM.EmailAddress
-			};
+			};*/
+
+			var newUser = _mapper.Map<ApplicationUser>(registerVM);
 
 			var newUserResponse = await _userManager.CreateAsync(newUser, registerVM.Password);
 

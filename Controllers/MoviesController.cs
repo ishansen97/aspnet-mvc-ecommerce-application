@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using ETicketsStore.Data.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using ETicketsStore.Data.Static;
+using AutoMapper;
 
 namespace ETicketsStore.Controllers
 {
@@ -17,10 +18,14 @@ namespace ETicketsStore.Controllers
 	public class MoviesController : Controller
 	{
 		private readonly IMovieService _movieService;
+		private readonly IMapper _mapper;
 
-		public MoviesController(IMovieService movieService)
+		public MoviesController(
+			IMovieService movieService,
+			IMapper mapper)
 		{
 			_movieService = movieService;
+			_mapper = mapper;
 		}
 
 		[AllowAnonymous]
@@ -91,21 +96,7 @@ namespace ETicketsStore.Controllers
 			var movieDetails = await _movieService.GetMovieByIdAsync(id);
 			if (movieDetails == null) return View("NotFound");
 
-			// TODO: use AutoMapper for mapping
-			var response = new NewMovieVM()
-			{
-				Id = movieDetails.Id,
-				Name = movieDetails.Name,
-				Description = movieDetails.Description,
-				Price = movieDetails.Price,
-				StartDate = movieDetails.StartDate,
-				EndDate = movieDetails.EndDate,
-				ImageURL = movieDetails.ImageURL,
-				MovieCategory = movieDetails.MovieCategory,
-				CinemaId = movieDetails.CinemaId,
-				ProducerId = movieDetails.ProducerId,
-				ActorIds = movieDetails.ActorMovies.Select(am => am.ActorId).ToList()
-			};
+			var response = _mapper.Map<NewMovieVM>(movieDetails);
 
 			await LoadViewBagData();
 
@@ -132,7 +123,6 @@ namespace ETicketsStore.Controllers
 		private async Task LoadViewBagData()
 		{
 			var dropdownData = await _movieService.GetNewMovieDropdownValues();
-			NewMovieDropdownsVM b = null;
 
 			ViewBag.Cinemas = new SelectList(dropdownData.Cinemas, "Id", "Name");
 			ViewBag.Producers = new SelectList(dropdownData.Producers, "Id", "FullName");

@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -37,8 +36,11 @@ namespace ETicketsStore
 			// configuring fluent validation.
 			services.AddMvc().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<MoviesValidator>());
 
-			// configuring Db Context
-			services.AddDbContext<AppDbContext>(options => 
+            // configuring auto mapper
+            services.AddAutoMapper(typeof(Startup));
+
+            // configuring Db Context
+            services.AddDbContext<AppDbContext>(options => 
 													options.UseSqlServer(Configuration.GetConnectionString("DefaultConnectionString")));
 
 			// configuring services

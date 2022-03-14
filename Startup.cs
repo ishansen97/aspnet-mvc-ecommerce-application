@@ -2,7 +2,9 @@ using ETicketsStore.Data;
 using ETicketsStore.Data.Cart;
 using ETicketsStore.Data.Services;
 using ETicketsStore.Data.Services.ServiceContracts;
+using ETicketsStore.Data.Validation;
 using ETicketsStore.Models;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -32,6 +34,9 @@ namespace ETicketsStore
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
+			// configuring fluent validation.
+			services.AddMvc().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<MoviesValidator>());
+
 			// configuring Db Context
 			services.AddDbContext<AppDbContext>(options => 
 													options.UseSqlServer(Configuration.GetConnectionString("DefaultConnectionString")));
@@ -55,7 +60,7 @@ namespace ETicketsStore
 				config.Password.RequireUppercase = false;
 				//config.SignIn.RequireConfirmedEmail = true;
 			})
-				.AddEntityFrameworkStores<AppDbContext>();
+			.AddEntityFrameworkStores<AppDbContext>();
 
 			services.AddSession();
 			services.AddMemoryCache();

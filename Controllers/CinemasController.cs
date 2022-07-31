@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ETicketsStore.Data.Validation;
+using FluentValidation;
 
 namespace ETicketsStore.Controllers
 {
@@ -39,7 +41,7 @@ namespace ETicketsStore.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Create([Bind("Logo,Name,Description")]Cinema cinema)
 		{
-			if (!ModelState.IsValid)
+            if (!ModelState.IsValid)
 			{
 				return View(cinema);
 			}
